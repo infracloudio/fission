@@ -56,4 +56,3 @@ jobs:
         run: |
           cat /home/runner/.config/gcloud/configurations/config_default
           kubectl get pods -n fission
-
