@@ -5,7 +5,7 @@ on:
       - gke-github-actions
     types: [labeled]
 jobs:
-  fission-on-gke:
+  fission-on-gke-gcloud:
     runs-on: ubuntu-latest
     env: 
       CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
