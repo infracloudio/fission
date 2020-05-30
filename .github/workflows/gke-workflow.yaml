@@ -20,12 +20,22 @@ jobs:
           CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
           ZONE_NAME: us-central1-c
 
-      - name: Testing
-        run: |
-          kubectl config view
-          kubectl config current-context
-          kubectl get ns
-          kubectl create namespace fission
+      - name: kubectl - Google Cloud GKE cluster.
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+          ZONE_NAME: us-central1-c
+        with:
+          args: config view 
+
+          #      - name: Testing
+          #        run: |
+          #          kubectl config view
+          #          kubectl config current-context
+          #          kubectl get ns
+          #          kubectl create namespace fission
 
           #      - name: Testing
           #        run: |
