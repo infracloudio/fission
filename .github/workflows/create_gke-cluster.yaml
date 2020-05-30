@@ -1,4 +1,4 @@
-name: kind-workflow
+name: gcloud-workflow
 on:
   pull_request:
     branches:
@@ -10,6 +10,8 @@ jobs:
     env: 
       CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
       ZONE_NAME: us-central1-c
+      APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}      
     steps:
       - name: Checkout fisson from master
         uses: actions/checkout@v2
@@ -19,10 +21,12 @@ jobs:
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '290.0.1'
-          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          project_id: ${{ secrets.PROJECT_ID }}
 
       - run: |
+          echo "$APPLICATION_CREDENTIALS" | base64 -d > /tmp/account.json
+          gcloud auth activate-service-account --key-file=/tmp/account.json --project "$PROJECT_ID"
           gcloud container clusters create "$CLUSTER_NAME" --zone "$ZONE_NAME"
           gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$ZONE_NAME"
 

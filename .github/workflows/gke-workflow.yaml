@@ -1,4 +1,4 @@
-name: kind-workflow
+name: gke-workflow
 on:
   pull_request:
     branches:
