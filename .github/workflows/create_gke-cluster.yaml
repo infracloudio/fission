@@ -7,18 +7,32 @@ on:
 jobs:
   fission-on-gke:
     runs-on: ubuntu-latest
+    env: 
+      CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+      ZONE_NAME: us-central1-c
     steps:
       - name: Checkout fisson from master
         uses: actions/checkout@v2
         with:
           ref: gke-github-actions
     
-      - uses: agiwalpooja20/spin-gke-action@master
-        env:
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
           APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
-          ZONE_NAME: us-central1-c
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+
+      - run: |
+          gcloud container clusters create "$CLUSTER_NAME" --zone "$ZONE_NAME"
+          gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$ZONE_NAME"
+
+
+        #      - uses: agiwalpooja20/spin-gke-action@master
+        #        env:
+        #          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        #          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        #          CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+        #          ZONE_NAME: us-central1-c
 
           #      - name: kubectl - Google Cloud GKE cluster.
           #        uses: ameydev/gke-kubectl-action@master
