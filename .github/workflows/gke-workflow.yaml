@@ -2,7 +2,7 @@ name: kind-workflow
 on:
   pull_request:
     branches:
-      - fission-github-actions
+      - gke-github-actions
     types: [labeled]
 jobs:
   fission-on-kind:
