@@ -30,12 +30,12 @@ jobs:
           #        with:
           #          args: config view 
 
-          #      - name: Testing
-          #        run: |
-          #          kubectl config view
-          #          kubectl config current-context
-          #          kubectl get ns
-          #          kubectl create namespace fission
+      - name: Testing
+        run: |
+          kubectl config view
+          kubectl config current-context
+          kubectl get ns
+          kubectl create namespace fission
 
           #      - name: Testing
           #        run: |
