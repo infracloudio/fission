@@ -5,7 +5,7 @@
 Fission is a FaaS -- users create functions (source level), register
 them with Fission using a CLI, and associate functions with triggers.
 
-Fission wraps those functions into a service and runs them on
+Fission wraps those functions into service and runs them on
 Kubernetes on demand.
 
 Here's an overview of the services that make up Fission.
@@ -29,7 +29,7 @@ Optional Components:
 Third-party components:
  * InfluxDB: To store function logs.
  * Prometheus: For metric collection and canary deployment.
- * NATS Streaming: For message queue trigger. (Kafka, Azure are not included in charts deployment.)
+ * NATS Streaming: For message queue trigger. (Kafka, Azure are not included in chart deployment.)
 
 ## Core Components
 
@@ -70,8 +70,8 @@ Fetcher is a straightforward utility that downloads a URL sent to it
 and saves it at a configured location (shared volume).
 
 The implementation chooses a generic pod from the pool, relabels it to
-"orphan". The pod from the deployment invokes fetcher to copy the function 
-into the pod and hits the specialize endpoint on the environment container. 
+"orphan". The pod from the deployment invokes a fetcher to copy the function 
+into the pod and hits the specialized endpoint on the environment container. 
 This causes the function to be loaded. The pod is now specific to that 
 function. This function pod is cached; it's cleaned up if it's unused for a few minutes.
 
@@ -82,7 +82,7 @@ and requires a short cold start time [1].
 
 However, PoolManager only selects one pod per function, which is not
 suitable for serving massive traffic. In such cases, you should consider
-using NewDeploy as executor type of function.
+using NewDeploy as an executor type of function.
 
 [1] The cold start time depends on the package size of the function. If it's
 a snippet of code, the cold start time usually is less then 100ms.
@@ -94,7 +94,7 @@ massive traffic.
 
 NewDeploy watches the function CRD changes and creates a Kubernetes deployment, 
 service, and HPA for a function. NewDeploy will scale the replicas of a function 
-deployment to the minimum feasible scale setting, if the minimum scale setting of 
+deployment to the minimum feasible scale setting if the minimum scale setting of 
 a function is greater than 0. The 'fetcher' inside the pod uses a URL in the 
 JSON payload, which is attached as a parameter to start fetcher, to download the 
 function package instead of waiting for calls from NewDeploy. 
@@ -148,7 +148,7 @@ Storage Service once the build succeeded, and updates the package status attache
 
 The storage service is the home for all archives of packages with sizes larger than 256KB.
 The Builder pulls the source archive from the storage service and uploads deploy archive to it.
-The fetcher inside the function pod also pulls the deploy archive for function specialization.
+The fetcher inside the function pod also pulls the deployed archive for function specialization.
 
 ## Optional Components
 
@@ -157,7 +157,7 @@ The fetcher inside the function pod also pulls the deploy archive for function s
 Logger is deployed as DaemonSet to help to forward function logs to a centralized 
 database service for log persistence. Currently, only InfluxDB is supported to store logs.
 
-Following is a diagram describe how log service works:
+Following is a diagram describing how log service works:
 1. Logger watches pod changes and creates a symlink to the container log if the pod runs on the same node.
 2. Fluentd reads logs from symlink and pipes them to InfluxDB
 3. `fission function logs ...` retrieve event logs from InfluxDB with optional log filter
@@ -192,7 +192,7 @@ Here's a diagram of the components:
 ### Timer
 
 The timer works like kubernetes CronJob but instead of creating a pod to do the task, 
-it sends a request to router to invoke the function. It's suitable for the background tasks that
+it sends a request to the router to invoke the function. It's suitable for the background tasks that
 need to executor periodically.
 
 The timer works like a Kubernetes CronJob, but instead of creating a 
